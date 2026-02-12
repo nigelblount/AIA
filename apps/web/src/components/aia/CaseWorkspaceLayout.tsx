@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { Card, Pill } from "@/components/aia/ui";
 import { mockGates, steps } from "@/lib/mock";
+import { ArtifactsPanel } from "@/components/aia/ArtifactsPanel";
 
 export function CaseWorkspaceLayout({
   orgSlug,
@@ -80,12 +81,7 @@ export function CaseWorkspaceLayout({
           </ul>
         </Card>
 
-        <Card title="Artifacts">
-          <div className="text-xs text-zinc-600">Inputs/outputs (DOCX/XLSX) with versions.</div>
-          <div className="mt-2">
-            <Pill tone="zinc">No artifacts linked (mock)</Pill>
-          </div>
-        </Card>
+        <ArtifactsPanel caseId={caseId} />
 
         <Card title="Audit">
           <div className="text-xs text-zinc-600">Merge events, approvals, exports.</div>

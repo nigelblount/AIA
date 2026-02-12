@@ -29,6 +29,25 @@ export type Gate = {
   decidedBy?: string;
 };
 
+export type ArtifactType =
+  | "input_docx"
+  | "input_xlsx"
+  | "dataset"
+  | "import_pack"
+  | "sociomap"
+  | "final_docx"
+  | "final_pdf";
+
+export type Artifact = {
+  id: string;
+  caseId: string;
+  type: ArtifactType;
+  filename: string;
+  versionLabel: string;
+  createdAt: string; // ISO
+  note?: string;
+};
+
 export const mockOrg = {
   slug: "aia-demo",
   name: "AIA Demo Workspace",
