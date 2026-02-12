@@ -5,11 +5,14 @@ import type { JSONContent } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
 import { Table } from "@tiptap/extension-table";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { Card, Pill } from "@/components/aia/ui";
+import { RibbonButton, RibbonGroup } from "@/components/aia/Ribbon";
 import {
   acceptProposal,
   ensureInitialDoc,
@@ -37,6 +40,10 @@ export function DocEditor({ studyId }: { studyId: string }) {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Underline,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
       Placeholder.configure({
         placeholder: "Začněte psát…",
       }),
@@ -48,8 +55,7 @@ export function DocEditor({ studyId }: { studyId: string }) {
     content: state.current as JSONContent,
     editorProps: {
       attributes: {
-        class:
-          "prose max-w-none prose-zinc focus:outline-none min-h-[520px] p-4",
+        class: "focus:outline-none",
       },
     },
   });
@@ -143,56 +149,91 @@ export function DocEditor({ studyId }: { studyId: string }) {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
-      <Card title="Dokument">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <button
-            className="rounded-md border border-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-zinc-50"
-            onClick={() => editor?.chain().focus().toggleBold().run()}
-          >
-            Tučně
-          </button>
-          <button
-            className="rounded-md border border-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-zinc-50"
-            onClick={() => editor?.chain().focus().toggleItalic().run()}
-          >
-            Kurzíva
-          </button>
-          <button
-            className="rounded-md border border-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-zinc-50"
-            onClick={() => editor?.chain().focus().toggleBulletList().run()}
-          >
-            Odrážky
-          </button>
-          <button
-            className="rounded-md border border-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-zinc-50"
-            onClick={() =>
-              editor
-                ?.chain()
-                .focus()
-                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-                .run()
-            }
-          >
-            Tabulka
-          </button>
+      <div className="space-y-3">
+        {/* Ribbon (Word-like) */}
+        <div className="rounded-xl border border-zinc-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-2">
+            <div className="text-sm font-semibold text-zinc-900">Dokument</div>
+            <div className="flex items-center gap-2">
+              {hasProposal ? <Pill tone="amber">Čeká návrh změn</Pill> : <Pill tone="green">Bez návrhu</Pill>}
+              <button
+                className="rounded-md bg-zinc-900 px-3 py-2 text-xs font-semibold text-white hover:bg-zinc-800"
+                onClick={saveCurrent}
+              >
+                Uložit
+              </button>
+            </div>
+          </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            {hasProposal ? <Pill tone="amber">Čeká návrh změn</Pill> : <Pill tone="green">Bez návrhu</Pill>}
-            <button
-              className="rounded-md bg-zinc-900 px-3 py-2 text-xs font-semibold text-white hover:bg-zinc-800"
-              onClick={saveCurrent}
-            >
-              Uložit
-            </button>
+          <div className="grid gap-3 px-4 py-3">
+            <div className="grid gap-3 lg:grid-cols-4">
+              <RibbonGroup title="Písmo">
+                <div className="grid grid-cols-3 gap-2">
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleBold().run()}>B</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleItalic().run()}>I</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleUnderline().run()}>U</RibbonButton>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <RibbonButton onClick={() => editor?.chain().focus().setParagraph().run()}>Normální</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}>Nadpis 1</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}>Nadpis 2</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}>Nadpis 3</RibbonButton>
+                </div>
+              </RibbonGroup>
+
+              <RibbonGroup title="Odstavec">
+                <div className="grid grid-cols-4 gap-2">
+                  <RibbonButton onClick={() => editor?.chain().focus().setTextAlign("left").run()}>Vlevo</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().setTextAlign("center").run()}>Na střed</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().setTextAlign("right").run()}>Vpravo</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().setTextAlign("justify").run()}>Do bloku</RibbonButton>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleBulletList().run()}>Odrážky</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().toggleOrderedList().run()}>Číslování</RibbonButton>
+                </div>
+              </RibbonGroup>
+
+              <RibbonGroup title="Vložit">
+                <div className="grid grid-cols-2 gap-2">
+                  <RibbonButton
+                    onClick={() =>
+                      editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+                    }
+                  >
+                    Tabulka
+                  </RibbonButton>
+                  <RibbonButton disabled>Obrázek</RibbonButton>
+                  <RibbonButton disabled>Zalomení stránky</RibbonButton>
+                </div>
+                <div className="mt-2 text-[11px] text-zinc-500">(obrázky + DOCX export doplníme)</div>
+              </RibbonGroup>
+
+              <RibbonGroup title="Revize">
+                <div className="grid grid-cols-2 gap-2">
+                  <RibbonButton onClick={() => editor?.chain().focus().undo().run()}>Zpět</RibbonButton>
+                  <RibbonButton onClick={() => editor?.chain().focus().redo().run()}>Znovu</RibbonButton>
+                </div>
+              </RibbonGroup>
+            </div>
           </div>
         </div>
 
-        <div className="rounded-lg border border-zinc-200 bg-white">
-          <EditorContent editor={editor} />
+        {/* A4 page canvas */}
+        <div className="rounded-xl border border-zinc-200 bg-zinc-200/50 p-6">
+          <div className="mx-auto w-full max-w-[820px]">
+            <div className="rounded-sm bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
+              <div className="px-16 py-14">
+                <div className="prose max-w-none prose-zinc">
+                  <EditorContent editor={editor} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {hasProposal ? (
-          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
             <div className="text-xs font-semibold text-amber-900">Návrh změn je připraven</div>
             <div className="mt-1 text-xs text-amber-900/80">
               Klikněte na „Přijmout změny“ pro aplikaci návrhu na celý dokument, nebo „Zamítnout“.
@@ -213,7 +254,7 @@ export function DocEditor({ studyId }: { studyId: string }) {
             </div>
           </div>
         ) : null}
-      </Card>
+      </div>
 
       <Card title="Agent">
         <div className="text-xs text-zinc-600">
