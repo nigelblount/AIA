@@ -90,11 +90,11 @@ export const mockGates: Gate[] = [
 
 export const steps = [
   { key: "intake", label: "Zadání" },
+  { key: "report", label: "Dokument" },
   { key: "evidence", label: "Evidence" },
   { key: "design", label: "Návrh studie" },
   { key: "data", label: "Data" },
   { key: "stats", label: "Statistika" },
-  { key: "report", label: "Návrh reportu" },
   { key: "qa", label: "Kontrola (QA)" },
   { key: "sociomapping", label: "Sociomapping" },
 ] as const;

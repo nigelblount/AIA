@@ -27,7 +27,7 @@ export function CaseWorkspaceLayout({
               return (
                 <Link
                   key={s.key}
-                  href={`/org/${orgSlug}/cases/${caseId}/${s.key}`}
+                  href={`/org/${orgSlug}/cases/${caseId}/${s.key === "report" ? "report" : s.key}`}
                   className={`block rounded-md px-2 py-1.5 text-sm ${isActive ? "bg-zinc-900 text-white" : "text-zinc-700 hover:bg-zinc-100"}`}
                 >
                   {s.label}
