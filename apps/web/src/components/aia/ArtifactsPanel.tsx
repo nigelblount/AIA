@@ -5,28 +5,14 @@ import type { Artifact, ArtifactType } from "@/lib/mock";
 import { seedArtifacts } from "@/lib/mockArtifacts";
 import { lsGet, lsSet } from "@/lib/storage";
 import { Card, Pill } from "@/components/aia/ui";
+import { t } from "@/i18n/t";
 
 function key(caseId: string) {
   return `aia.artifacts.${caseId}`;
 }
 
-function typeLabel(t: ArtifactType) {
-  switch (t) {
-    case "input_docx":
-      return "Input DOCX";
-    case "input_xlsx":
-      return "Input XLSX";
-    case "dataset":
-      return "Dataset";
-    case "import_pack":
-      return "Import Pack";
-    case "sociomap":
-      return "Sociomap";
-    case "final_docx":
-      return "Final DOCX";
-    case "final_pdf":
-      return "Final PDF";
-  }
+function typeLabel(tt: ArtifactType) {
+  return t(`artifacts.types.${tt}`);
 }
 
 export function ArtifactsPanel({ caseId }: { caseId: string }) {
@@ -53,7 +39,7 @@ export function ArtifactsPanel({ caseId }: { caseId: string }) {
       filename: filename.trim(),
       versionLabel: versionLabel.trim() || "v1",
       createdAt: new Date().toISOString(),
-      note: "Mock upload (UI demo)",
+      note: t("artifacts.note"),
     };
     lsSet(key(caseId), [a, ...stored]);
     setFilename("");
@@ -64,20 +50,20 @@ export function ArtifactsPanel({ caseId }: { caseId: string }) {
   }
 
   return (
-    <Card title="Artifacts">
+    <Card title={t("artifacts.title")}>
       <div className="flex items-center justify-between">
-        <div className="text-xs text-zinc-600">Versioned inputs/outputs (DOCX/XLSX etc.).</div>
+        <div className="text-xs text-zinc-600">{t("artifacts.helper")}</div>
         <button
           className="rounded-md border border-zinc-200 px-2.5 py-1.5 text-xs font-semibold hover:bg-zinc-50"
           onClick={() => setOpen(true)}
         >
-          Upload
+          {t("artifacts.upload")}
         </button>
       </div>
 
       <div className="mt-3 space-y-2">
         {artifacts.length === 0 ? (
-          <div className="text-xs text-zinc-500">No artifacts yet.</div>
+          <div className="text-xs text-zinc-500">{t("artifacts.noArtifacts")}</div>
         ) : (
           artifacts.map((a) => (
             <div key={a.id} className="rounded-lg border border-zinc-200 p-2">
@@ -99,37 +85,37 @@ export function ArtifactsPanel({ caseId }: { caseId: string }) {
 
       {open ? (
         <div className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-          <div className="text-xs font-semibold text-zinc-900">Mock upload</div>
+          <div className="text-xs font-semibold text-zinc-900">{t("artifacts.mockUpload")}</div>
           <div className="mt-2 grid gap-2">
             <label className="text-xs text-zinc-700">
-              Type
+              {t("artifacts.type")}
               <select
                 className="mt-1 h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm"
                 value={type}
                 onChange={(e) => setType(e.target.value as ArtifactType)}
               >
-                <option value="input_docx">Input DOCX</option>
-                <option value="input_xlsx">Input XLSX</option>
-                <option value="dataset">Dataset</option>
-                <option value="import_pack">Import Pack</option>
-                <option value="sociomap">Sociomap</option>
-                <option value="final_docx">Final DOCX</option>
-                <option value="final_pdf">Final PDF</option>
+                <option value="input_docx">{t("artifacts.types.input_docx")}</option>
+                <option value="input_xlsx">{t("artifacts.types.input_xlsx")}</option>
+                <option value="dataset">{t("artifacts.types.dataset")}</option>
+                <option value="import_pack">{t("artifacts.types.import_pack")}</option>
+                <option value="sociomap">{t("artifacts.types.sociomap")}</option>
+                <option value="final_docx">{t("artifacts.types.final_docx")}</option>
+                <option value="final_pdf">{t("artifacts.types.final_pdf")}</option>
               </select>
             </label>
 
             <label className="text-xs text-zinc-700">
-              Filename
+              {t("artifacts.filename")}
               <input
                 className="mt-1 h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm"
-                placeholder="e.g., inputs.xlsx"
+                placeholder="např. vstupy.xlsx"
                 value={filename}
                 onChange={(e) => setFilename(e.target.value)}
               />
             </label>
 
             <label className="text-xs text-zinc-700">
-              Version label
+              {t("artifacts.versionLabel")}
               <input
                 className="mt-1 h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm"
                 placeholder="v1"
@@ -144,17 +130,17 @@ export function ArtifactsPanel({ caseId }: { caseId: string }) {
               className="rounded-md bg-zinc-900 px-3 py-2 text-xs font-semibold text-white hover:bg-zinc-800"
               onClick={addArtifact}
             >
-              Save
+              {t("artifacts.save")}
             </button>
             <button
               className="rounded-md border border-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-white"
               onClick={() => setOpen(false)}
             >
-              Cancel
+              {t("artifacts.cancel")}
             </button>
           </div>
           <div className="mt-2 text-[11px] text-zinc-500">
-            This is stored in your browser (localStorage) for the demo. We’ll wire it to S3 + DB when backend exists.
+            {t("artifacts.localOnly")}
           </div>
         </div>
       ) : null}

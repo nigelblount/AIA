@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { mockCases, statusLabel } from "@/lib/mock";
 import { Pill } from "@/components/aia/ui";
+import { t } from "@/i18n/t";
 
 export default async function CasesPage({ params }: { params: Promise<{ orgSlug: string }> }) {
   const { orgSlug } = await params;
@@ -8,10 +9,10 @@ export default async function CasesPage({ params }: { params: Promise<{ orgSlug:
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Cases</div>
-          <h1 className="mt-1 text-2xl font-semibold">All cases</h1>
+          <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">{t("nav.cases")}</div>
+          <h1 className="mt-1 text-2xl font-semibold">{t("nav.cases")}</h1>
         </div>
-        <button className="rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-800">New case</button>
+        <button className="rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-800">{t("dashboard.newCase")}</button>
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white shadow-sm">
@@ -19,11 +20,11 @@ export default async function CasesPage({ params }: { params: Promise<{ orgSlug:
           <table className="w-full text-left text-sm">
             <thead className="bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-600">
               <tr>
-                <th className="px-4 py-3">Case</th>
-                <th className="px-4 py-3">Client</th>
-                <th className="px-4 py-3">Owner</th>
-                <th className="px-4 py-3">Due</th>
-                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">{t("dashboard.columns.name")}</th>
+                <th className="px-4 py-3">{t("dashboard.columns.client")}</th>
+                <th className="px-4 py-3">{t("dashboard.columns.owner")}</th>
+                <th className="px-4 py-3">{t("dashboard.columns.due")}</th>
+                <th className="px-4 py-3">{t("dashboard.columns.status")}</th>
               </tr>
             </thead>
             <tbody>
