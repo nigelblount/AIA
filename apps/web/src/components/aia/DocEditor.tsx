@@ -38,6 +38,7 @@ export function DocEditor({ studyId }: { studyId: string }) {
   }, [studyId, refresh]);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Underline,

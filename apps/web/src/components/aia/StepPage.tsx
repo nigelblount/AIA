@@ -10,6 +10,7 @@ export async function StepPage({
   children: React.ReactNode;
 }) {
   const { orgSlug, caseId } = await params;
+
   return (
     <CaseWorkspaceLayout orgSlug={orgSlug} caseId={caseId} activeStep={stepKey}>
       {children}

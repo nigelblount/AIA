@@ -1,12 +1,9 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Card } from "@/components/aia/ui";
 import { StepPage } from "@/components/aia/StepPage";
-import { ensureInitialDoc } from "@/lib/doc";
 
-export default function IntakePage({ params }: { params: Promise<{ orgSlug: string; caseId: string }> }) {
-  const router = useRouter();
+export default async function IntakePage({ params }: { params: Promise<{ orgSlug: string; caseId: string }> }) {
+  const { orgSlug, caseId } = await params;
 
   return (
     <StepPage params={params} stepKey="intake">
@@ -20,17 +17,13 @@ export default function IntakePage({ params }: { params: Promise<{ orgSlug: stri
           <Field label="Jazyk" placeholder="cs-CZ" />
         </div>
         <div className="mt-3 flex items-center gap-2">
-          <button
+          <Link
             className="rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-800"
-            onClick={async () => {
-              const { caseId, orgSlug } = await params;
-              ensureInitialDoc(caseId);
-              router.push(`/org/${orgSlug}/cases/${caseId}/report`);
-            }}
+            href={`/org/${orgSlug}/cases/${caseId}/report`}
           >
             Vytvořit dokument
-          </button>
-          <span className="text-xs text-zinc-500">(demo: vytvoří strukturu dokumentu)</span>
+          </Link>
+          <span className="text-xs text-zinc-500">(demo: dokument se inicializuje při otevření reportu)</span>
         </div>
       </Card>
     </StepPage>
